@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">COVID 19</string>
+    <string name="test">faire le test</string>
+    <string name="begin">commencer</string>
+    <string name="result">derniers resultats</string>
+    <string name="choix">Cliquez sur le bouton FAIRE LE TEST pour faire le test ou sur le bouton DERNIERS RESULTATS pour obtenir les derniers resultats de la COVID.</string>
+
+    <string name="descript">La maladie à coronavirus 2019 (COVID-19) est une ‎maladie infectieuse due à un coronavirus découvert ‎récemment. ‎La majorité des personnes atteintes de la COVID-19 ‎ne ressentiront que des symptômes bénins ou ‎modérés et guériront sans traitement particulier.Le virus qui entraîne la COVID-19 se transmet ‎principalement par des gouttelettes produites ‎lorsqu’une personne infectée tousse, éternue, ou ‎lors d’une expiration. Ces gouttelettes sont trop ‎lourdes pour rester dans l’air et tombent ‎rapidement sur le sol ou sur toute surface proche.‎</string>
+    <string name="temperature">Avez-vous de la fièvre ?</string>
+    <string name="tousse">Est-ce que vous toussez ?</string>
+    <string name="tete">Avez-vous des maux de tête ?</string>
+    <string name="gorge">Sentez-vous des douleurs à la gorge ?</string>
+    <string name="rhume">Avez-vous la rhume ?</string>
+    <string name="res_test">Voici les résultats des tests du jour. Sur les 1500 tests éfféctués, 320 cas sont revenus positifs dont 200 cas issus de la transmission communautaite, 100 cas sont contacts et les 20 cas restants sont importés.
+    Ils sont répartis comme suit : Dakar: 90 cas, Thies: 90 cas, St Louis: 60 cas et Louga: 60 cas</string>
+    <string name="date">Voici les derniers résultats:</string>
+    <string name="positif">Nombre de cas positifs :</string>
+    <string name="négatif">Nombre de cas guéris :</string>
+    <string name="deces">Nombre de décés :</string>
+
+</resources>
