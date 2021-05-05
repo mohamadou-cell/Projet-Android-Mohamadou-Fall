@@ -1,9 +1,16 @@
 package Controller;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -18,20 +25,27 @@ import android.widget.Toast;
 import com.example.Test_COVID.Database;
 import com.example.Test_COVID.R;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import javax.net.ssl.SSLEngineResult;
 
 import Model.Personne;
 
-public class InformationActivity extends AppCompatActivity  {
+public class InformationActivity extends AppCompatActivity {
+    private FusedLocationProviderClient fusedLocationProviderClient;
     private EditText nom, prenom, adresse, profil;
     private Button btn2;
     private Personne p1;
@@ -52,18 +66,19 @@ public class InformationActivity extends AppCompatActivity  {
         icone = (ImageView) findViewById(R.id.im2);
         locate = (ImageButton) findViewById(R.id.im9);
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
-        Places.initialize(getApplicationContext(), "AIzaSyD80Is3lmK-wjOgp4ej45qYydjYedq30Rs");
-        locate.setFocusable(false);
         locate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Place.Field> fieldList = Arrays.asList(Place.Field.ADDRESS,
-                        Place.Field.LAT_LNG, Place.Field.NAME);
-                Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY,
-                        fieldList).build(InformationActivity.this);
-                startActivityForResult(intent, 100);
+                if (ActivityCompat.checkSelfPermission(InformationActivity.this,
+                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    getLocation();
+                } else {
+                    ActivityCompat.requestPermissions(InformationActivity.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 44);
+                }
             }
         });
 
@@ -83,6 +98,38 @@ public class InformationActivity extends AppCompatActivity  {
             public void onClick(View v) {
                 Intent mo = new Intent(InformationActivity.this, ChoiceActivity.class);
                 startActivity(mo);
+            }
+        });
+    }
+
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                Location location = task.getResult();
+                if (location != null){
+
+                    try {
+                        Geocoder geocoder = new Geocoder(InformationActivity.this,
+                                Locale.getDefault());
+                        List<Address> addresses = geocoder.getFromLocation(
+                                location.getLatitude(), location.getLongitude(), 1
+                        );
+                        adresse.setText(addresses.get(0).getAddressLine(0));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }
@@ -111,16 +158,5 @@ public class InformationActivity extends AppCompatActivity  {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==100 && resultCode==RESULT_OK){
-            Place place = Autocomplete.getPlaceFromIntent(data);
-            adresse.setText(place.getAddress());
-            adresse.setText(String.format("Locality Name : %s",place.getName()));
-            adresse.setText(String.valueOf(place.getLatLng()));
-
-        }
-    }
-
 }
+

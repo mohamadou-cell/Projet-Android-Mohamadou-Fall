@@ -137,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:hint="Entrer votre adresse"
+                android:hint="Click on locate"
                 android:gravity="center"
                 android:inputType="textPersonName"
                 android:textColor="@color/white"
